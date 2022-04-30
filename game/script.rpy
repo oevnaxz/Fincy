@@ -73,6 +73,7 @@ label start:
     #ROLL -- WHITE TRANSITION TO KID MC TALKING WITH ALTERNATE MC
     play music "audio/introduction/decision.mp3"
     scene plainWhite
+    with fade
 
     show kidMC confused
     with dissolve
@@ -83,19 +84,54 @@ label start:
 
     show alternateMC welcoming
     with dissolve
-    alternateMC "INSERT MORE DIALOGUE"
+    alternateMC "Hey there! Unfortunately this is not heaven, but an empty space where we could talk about anything. And yes, you died - in case you're not aware."
 
     hide alternateMC
     show kidMC confused
     with dissolve
-    kidMC "INSERT MORE DIALOGUE"
+    kidMC "What empty space? Why am I in a kid's body? And more importantly, who are you?"
 
     hide kidMC
     show alternateMC welcoming
     with dissolve
-    alternateMC "INSERT MORE DIALOGUE"
+    alternateMC "Apparently, that's actually '{i}you{/i}' as a kid back then."
+
+
+
+    hide kidMC
+    show alternateMC welcoming
+    with dissolve
     alternateMC """
-    I had two fathers, a rich one and a poor one. One finished his education, had a Ph.D., and went to multiple universities to do his advanced studies.
+    And as for who I am, I am actually {i}you{/i} as well, {b}BUT{/b} from a different timeline.
+    
+    I am what you would call the successful version of you. I am the persona you've imagined and wanted to be before your last breath.
+    """
+
+    hide alternateMC
+    show kidMC astonished
+    with dissolve
+    kidMC "Woah, lucky you. I wish I could be like you when I was still alive."
+
+    hide kidMC
+    show alternateMC laughing
+    with dissolve
+    #PLAY SOUND CHUCKLE
+    alternateMC "I wouldn't really call myself lucky. This was merely the result of weighing out the options presented to me by my two fathers and then deciding for myself - unafraid of testing the waters, being different and many more!"
+    
+    alternateMC "This was all possible with the teachings and lessons given to me by my 'other' father."
+
+    hide alternateMC
+    show kidMC astonished
+    with dissolve
+    kidMC "Huh? Other father? Like your foster father or something?"
+
+    hide kidMC
+    show alternateMC
+    with dissolve
+    alternateMC "Not really, he was actually my best friend's father. I just referred him as my second father as he took us under his wing and guided us to our success."
+
+    alternateMC """
+    With that said I had two fathers - a rich one and a poor one. One finished his education, had a Ph.D., and went to multiple universities to do his advanced studies.
 
     The other father never finished his Junior High School.
     """
@@ -173,7 +209,7 @@ label start:
         "Yes":
             call reason1 #NO CONTINUATION YET
 
-    alternateMC "See? Schools would rather focus teaching their students scholastic and professional skills rather than financial skills."
+    alternateMC "You see, schools would rather focus teaching their students scholastic and professional skills rather than financial skills."
     alternateMC "Now, remember when I told you about deciding for yourself is important?"
 
     #3RD INTERACTION MENU
@@ -193,12 +229,83 @@ label start:
     #4TH INTERACTION MENU
     menu:
         "The one who {b}thinks{/b} constantly?":
-            pass
+            call thinkConstantly
         "The one who {b}shuts{/b} his brain off ":
-            pass
+            call shutsBrain
 
-    "end"
-    "new change"
+    alternateMC """
+    Anyways, here are some more examples on how different they think. 
+    
+    One of them encouraged talking about money and business at the dinner table, while the other forbade the subject of money to be discussed over a meal.
+    """
+    
+    alternateMC """
+    One said '{i}When it comes to money, play it {b}SAFE{/b}. Don't take risks{/i}.'. 
+    
+    While the other said, '{i}Learn to {b}MANAGE{/b} your financial risks effectively{/i}.'.
+    """
+    alternateMC """
+    One believed '{i}Our home {b}IS{/b} our largest investment and our greatest asset{/i}.'. 
+    
+    Meanwhile, the other believed '{i}Our house {b}IS NOT{/b} an asset, but a liability. If your house is your largest investment, you're in trouble{/i}.'.
+    """
+    alternateMC """
+    One dad taught me how to write an impressive resumé so I could {b}FIND and LAND{/b} a good job. 
+    
+    The other taught me how to write strong business and financial plans so I could {b}CREATE{/b} jobs.
+    """
+
+    alternateMC "See the difference between their mindset?"
+
+    hide alternateMC
+    show kidMC
+    with dissolve
+    kidMC "Yeah, but wouldn't you be morally confused as to who should you follow?"
+
+    hide kidMC
+    show alternateMC laughing
+    with dissolve
+    #PLAY SOUND CHUCKLE
+    alternateMC "Well I did at first.. but how I balanced two contrasting points? That's for you to find out!"
+
+    hide alternateMC
+    show kidMC confused
+    with dissolve
+    kidMC "Why are you telling me all this anyway? Why am I even here? I'm pretty sure I died peacefully."
+
+    hide kidMC
+    show alternateMC
+    with dissolve
+    alternateMC "Remember being regretful about your financial decisions when you were alive?"
+
+    #5TH INTERACTION MENU
+    menu: 
+        "Yes":
+            pass
+        "Not really..":
+            call regretfulMemoriesFlashBack
+    
+    alternateMC """
+    Basically, you would be alive again. But this time, you'll be able to be a better person and a father as well.
+    
+    You'll be experiencing my life. Now, it is up to you how you would walk this path. 
+    """
+    
+    hide alternateMC
+    show alternateMC happy
+    with dissolve
+    #PLAY SOUND CHUCKLE
+    alternateMC "Good luck out there, mini me! Enjoy the second chance!"
+    
+    hide alternateMC
+    show kidMC
+    with dissolve
+    kidMC "Wai-!"
+
+    #PLAY SOUND WHOOSH
+    scene plainBlack
+    with fade
+    "..."
     return
 
 
@@ -220,7 +327,7 @@ label reason0:
 
     return
 
-label reason1:
+label reason1: #ANDIE WILL PROVIDE ANSWER AS SHE HAS PRIOR KNOWLEDGE WHEN IT COMES TO FINANCE
     alternateMC "And the reason is?"
     menu:
         "CHOICE 1":
@@ -237,7 +344,7 @@ label studyHard:
     return
 
 label tellThemToStudy:
-    alternateMC "Of course, to study hard and do their best -- look for a company to work for!"
+    alternateMC "Of course, to study hard and do their best --- then tell them to look for a company to work for!"
 
     return
 
@@ -259,4 +366,43 @@ label doNotRemember:
     with dissolve
     alternateMC "Right!"
 
+    return
+
+#4TH USER INTERACTION MENU
+label thinkConstantly:
+    alternateMC "Right! This analogy is not much different from a person who goes to the gym to exercise on a regular basis versus someone who basically sits on the couch and binge-watch any entertaining series."
+    
+    return
+
+label shutsBrain:
+    #PLAY SOUND CHUCKLE
+    alternateMC """
+    Huh.. are you being sarcastic right now? Did you hit your head or something?
+    
+    Well, regardless the obvious answer is those who {b}CONSTANTLY{/b} thinks. This is not much different from a person who goes to the gym to train on a regular basis.
+    """
+
+    return
+
+#5TH USER INTERACTION MENU
+label regretfulMemoriesFlashBack:
+    alternateMC "Don't hate me on this, mini-me!"
+    $ transitionCount = 1
+    while(transitionCount < 3):
+        show expression("intro/flashbacks/[transitionCount].png")
+        with dissolve
+        "Click to continue"
+        $ transitionCount += 1
+    "Click to continue"
+    with dissolve
+
+    scene plainWhite
+    with fade
+
+    show kidMC confused
+    with dissolve
+    kidMC "..."
+
+    show alternateMC
+    with dissolve
     return
