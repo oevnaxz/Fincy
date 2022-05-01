@@ -187,7 +187,7 @@ label start:
 
     While the other would say '{i}The lack of money {b}is{/b} the root of all evil.{/i}'
     """
-    alternateMC "Much of my precious time was spent on asking myself 'Why does he say that?'."
+    alternateMC "Much of my precious time was spent on asking myself '{i}Why does he say that?{/i}'."
 
     hide alternateMC
     show kidMC
@@ -286,16 +286,19 @@ label start:
             call regretfulMemoriesFlashBack
     
     alternateMC """
-    Basically, you would be alive again. But this time, you'll be able to be a better person and a father as well.
+    As to why I'm telling you this, basically, you would be alive again. But this time, you'll be able to be a better person and a father as well.
     
     You'll be experiencing my life. Now, it is up to you how you would walk this path. 
     """
     
     hide alternateMC
-    show alternateMC happy
+    show alternateMC laughing
     with dissolve
     #PLAY SOUND CHUCKLE
-    alternateMC "Good luck out there, mini me! Enjoy the second chance!"
+    alternateMC "Remember this very well: Money is one form of power. But what is more powerful is financial education."
+    alternateMC "Money comes and goes, but if you have the education about how money works, you gain power over it and can begin building wealth."
+    alternateMC "All these experiences and lessons you'll be acquiring aren't meant as answers, {b}but{/b} guideposts that will assist you and your children to grow wealthier no matter what happens in a world of increasing change and uncertainty."
+    alternateMC "Lastly, good luck out there mini-me! Enjoy the second chance!"
     
     hide alternateMC
     show kidMC
@@ -344,7 +347,7 @@ label studyHard:
     return
 
 label tellThemToStudy:
-    alternateMC "Of course, to study hard and do their best --- then tell them to look for a company to work for!"
+    alternateMC "Of course, to study hard and do their best - then tell them to look for a company to work for!"
 
     return
 
@@ -379,7 +382,7 @@ label shutsBrain:
     alternateMC """
     Huh.. are you being sarcastic right now? Did you hit your head or something?
     
-    Well, regardless the obvious answer is those who {b}CONSTANTLY{/b} thinks. This is not much different from a person who goes to the gym to train on a regular basis.
+    Well, regardless, the obvious answer is those who {b}CONSTANTLY{/b} thinks. This is not much different from a person who goes to the gym to train on a regular basis.
     """
 
     return
