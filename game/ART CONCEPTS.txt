@@ -1,0 +1,93 @@
+CHARACTERS:
+	alternateMC (male):
+		wears a coat
+		short haired (60/40 parted hairstyle)
+		only has two emotions:
+			smiling
+			default
+	kidMC (male):
+		small kid
+		short haired (60/40 parted hairstyle)
+		freckled
+		t-shirt
+	MC (male):
+		same as alternateMC (wears a coat)
+		1 illust. of just wearing casual clothes
+	Mike:
+		small kid
+		short haired (messy)
+		t-shirt
+	biologicalDad:
+		receding hairline
+		wears glasses
+		wears long sleeve and necktie
+		scrawny
+		typical workaholic
+	biologicalMom:
+		short hair
+		strict
+	richDad:
+		200 pound 6ft man
+		wears long sleeve
+		bearded
+		formal haircut
+	mrsMartin:
+		on her 60s-70s
+		grey hair
+		semi-stout
+		wears glasses
+		typical early grandma look
+	neighbor (female):
+		generic
+	biologicalDad's friend (male):
+		generic
+	comicDistributor (male):
+		generic
+	
+
+
+EMOTIONS: 
+	(all characters have these except neighbor, biologicalDad's friend, biologicalMom, comicDistributor and alternateMC)
+	smiling
+	sad
+	confused
+	serious
+	surprised
+	defaultEmotion
+	thinking (puts hand on chin)
+	flustered
+	
+	kidMC exclusive:
+		shrugging shoulders
+	biologicalMom exclusive:
+		threatening smile
+	richDad exclusive:
+		pointing on his head
+		sly grin
+
+SCENES (flat image, 1920 * 1080)
+	Chapter 0:
+		MC laying on hospital bed (closed eyes, and not)
+		
+	Chapter 1:
+		kids reading comic books on basement (any number of kids)
+
+SMALL IMAGES (wallet/card sized illustrations):
+	Chapter 0:	
+		for flashbacks - showcasing regrets
+			(getting fired (packed things on table), empty wallet, empty bank account, to-pay slips are piling up on table)
+	Chapter 1:
+		mike whispering onto kidMC's ear
+		breaking plastic mold with hammer
+			(hammer hitting the mold (mold has cracks))
+		nickel (circular)
+		boiling pot
+			(rusty canister with accents of orange from heat)
+		pour into plaster mold
+		coins on open hands
+		ball bouncing on grass
+	CHAPTER 2:
+		A kid reading a book
+		Signing a waiver (can be just random lines, pwedeng may sinusulat or nakababa na lang yung pen)
+		
+		
