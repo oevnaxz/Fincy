@@ -18,7 +18,7 @@ define config.name = _("Fincy")
 ## Determines if the title given above is shown on the main menu screen. Set
 ## this to False to hide the title.
 
-define gui.show_name = True
+define gui.show_name = False
 
 
 ## The version of the game.
@@ -50,6 +50,10 @@ define config.has_sound = True
 define config.has_music = True
 define config.has_voice = True
 
+# Volume control for SFX, BGM, and Voice.
+define config.default_music_volume = 0.3
+define config.default_sfx_volume = 0.3
+define config.default_voice_volume = 0.5
 
 ## To allow the user to play a test sound on the sound or voice channel,
 ## uncomment a line below and use it to set a sample sound to play.
@@ -72,7 +76,8 @@ define config.has_voice = True
 ## transition should be used.
 
 ## Entering or exiting the game menu.
-
+#for smooth transition after exiting the splashscreen
+define config.end_splash_transition = dissolve
 define config.enter_transition = dissolve
 define config.exit_transition = dissolve
 
@@ -120,7 +125,7 @@ define config.window_hide_transition = Dissolve(.2)
 ## Controls the default text speed. The default, 0, is infinite, while any other
 ## number is the number of characters per second to type out.
 
-default preferences.text_cps = 0
+default preferences.text_cps = 40
 
 
 ## The default auto-forward delay. Larger numbers lead to longer waits, with 0
@@ -207,3 +212,4 @@ init python:
 ## by a slash.
 
 # define build.itch_project = "renpytom/test-project"
+define analytics.tracking_id = "UA-232638381-1"

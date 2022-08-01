@@ -299,6 +299,10 @@ screen navigation():
 
         spacing gui.navigation_spacing
 
+        if renpy.can_load("quitsave"):
+            
+            textbutton _("Resume") action FileLoad("quitsave", slot=True)
+
         if main_menu:
 
             textbutton _("Start") action Start()
@@ -311,6 +315,8 @@ screen navigation():
 
         textbutton _("Load") action ShowMenu("load")
 
+        textbutton _("Chapters") action ShowMenu("chapter_list")
+
         textbutton _("Preferences") action ShowMenu("preferences")
 
         if _in_replay:
@@ -322,6 +328,8 @@ screen navigation():
             textbutton _("Main Menu") action MainMenu()
 
         textbutton _("About") action ShowMenu("about")
+
+        textbutton _("Credits") action ShowMenu("credits")
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
@@ -344,6 +352,7 @@ style navigation_button:
 
 style navigation_button_text:
     properties gui.button_text_properties("navigation_button")
+    xalign 0.5
 
 
 ## Main Menu screen ############################################################
@@ -358,7 +367,7 @@ screen main_menu():
     tag menu
 
     add gui.main_menu_background
-
+    
     ## This empty frame darkens the main menu.
     frame:
         style "main_menu_frame"
@@ -563,9 +572,21 @@ screen about():
             if gui.about:
                 text "[gui.about!t]\n"
 
-            text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
-
-
+            text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]\n")
+            label "{b}1. BACKGROUND AND PURPOSE{/b}"
+            text _("\nSince there is an underlying problem in regards to people being completely unaware of what they should do with their paycheck, together with the number of opportunities to earn continuously growing, studies show that those people who did not take any financial management courses tend to be clueless on how they should save, and utilize their money.\n\nSo, the researchers have developed a game in order to mend the said problem, providing them several guideposts throughout playing the game to set their journey to financial freedom straight.")
+            
+            label "\n{b}2. SPECIFICATION{/b}"
+            label "\n{b}2.1 Concept{/b}"
+            text _("\nThe aim of the game Fincy is to introduce to the users the different financial management behaviors in order to provide them sufficient knowledge not to get lost on their journey to attain financial freedom.")
+            label "\n{b}2.2 Story{/b}"
+            label "\n{b}2.2.1 Subject{/b}"
+            text _("\nThe story of Fincy is heavily derived on the book titled \'Rich Dad, Poor Dad\' by Mr. Robert Kiyosaki. The game covers most of the essential lessons presented and shared by none other than the author himself.")
+            label "\n{b}2.2.2 Characters{/b}"
+            text _("\nThe characters introduced on the game are based on the literature of Mr. Robert Kiyosaki's Rich Dad, Poor Dad. However, the developers also introduced original concept characters.")
+            label "\n{b}2.2.3 Setting{/b}"
+            text _("\nThe game will be set in a present-day world.")
+    
 style about_label is gui_label
 style about_label_text is gui_label_text
 style about_text is gui_text
@@ -573,6 +594,33 @@ style about_text is gui_text
 style about_label_text:
     size gui.label_text_size
 
+
+## Credits screen ################################################################
+##
+## This screen gives credit and copyright information about the game and Ren'Py.
+##
+## There's nothing special about this screen, and hence it also serves as an
+## example of how to make a custom screen.
+
+screen credits():
+
+    tag menu
+
+    ## This use statement includes the game_menu screen inside this one. The
+    ## vbox child is then included inside the viewport inside the game_menu
+    ## screen.
+    use game_menu(_("Credits"), scroll="viewport"):
+
+        style_prefix "credits"
+
+        vbox:
+            text _("The creation of this game would not be possible without the help of these great people.\n\nTherefore, the KIBA Development Group would like to extend their gratitude to the following:\n\n")
+            label "{b}{u}Character Illustrations:{/u}{/b}"
+            text _("by Ms. Nina Manzano\n{a}www.instagram.com/nanochandraws/{/a}\n{a}www.twitter.com/nanochandraws{/a}\n{a}nanochandraws.wixsite.com/nanochandraws{/a}\n")
+            label "{b}{u}Background Images{/u}{/b}"
+            text _("by Uncle Mugen\n{a}lemmasoft.renai.us/forums/memberlist.php?mode=viewprofile&u=372{/a}\n")
+            label "{b}{u}Sound Effects:{/u}{/b}"
+            text _("by Zapsplat\n{a}www.zapsplat.com{/a}\n\nby Eric Matyas\n{a}www.soundimage.org{/a}")
 
 ## Load and Save screens #######################################################
 ##
@@ -747,6 +795,22 @@ screen preferences():
 
                 ## Additional vboxes of type "radio_pref" or "check_pref" can be
                 ## added here, to add additional creator-defined preferences.
+            
+            null height (4 * gui.pref_spacing)
+
+            vbox:
+                style_prefix "radio"
+                label _("Font")
+                textbutton _("Default") action gui.SetPreference("font", "DejaVuSans.ttf")
+                textbutton _("OpenDyslexic") action  gui.SetPreference("font", "OpenDyslexic-Regular.otf")
+
+            null height (4 * gui.pref_spacing)
+            
+            vbox: 
+                style_prefix "radio"
+                label _("Tracking")
+                textbutton _("Enabled") action SetField(persistent, "analytics", True)
+                textbutton _("Disabled") action SetField(persistent, "analytics", False)
 
             null height (4 * gui.pref_spacing)
 
@@ -763,6 +827,7 @@ screen preferences():
                     label _("Auto-Forward Time")
 
                     bar value Preference("auto-forward time")
+                
 
                 vbox:
 
@@ -1295,37 +1360,42 @@ style notify_text:
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#nvl
 
-
 screen nvl(dialogue, items=None):
 
-    window:
-        style "nvl_window"
+    #### ADD THIS TO MAKE THE PHONE WORK!! :) ###
+    if nvl_mode == "phone":
+        use PhoneDialogue(dialogue, items)
+    else:
+    ####
+    ## Indent the rest of the screen
+        window:
+            style "nvl_window"
 
-        has vbox:
-            spacing gui.nvl_spacing
+            has vbox:
+                spacing gui.nvl_spacing
 
-        ## Displays dialogue in either a vpgrid or the vbox.
-        if gui.nvl_height:
+            ## Displays dialogue in either a vpgrid or the vbox.
+            if gui.nvl_height:
 
-            vpgrid:
-                cols 1
-                yinitial 1.0
+                vpgrid:
+                    cols 1
+                    yinitial 1.0
+
+                    use nvl_dialogue(dialogue)
+
+            else:
 
                 use nvl_dialogue(dialogue)
 
-        else:
+            ## Displays the menu, if given. The menu may be displayed incorrectly if
+            ## config.narrator_menu is set to True, as it is above.
+            for i in items:
 
-            use nvl_dialogue(dialogue)
+                textbutton i.caption:
+                    action i.action
+                    style "nvl_button"
 
-        ## Displays the menu, if given. The menu may be displayed incorrectly if
-        ## config.narrator_menu is set to True, as it is above.
-        for i in items:
-
-            textbutton i.caption:
-                action i.action
-                style "nvl_button"
-
-    add SideImage() xalign 0.0 yalign 1.0
+        add SideImage() xalign 0.0 yalign 1.0
 
 
 screen nvl_dialogue(dialogue):
@@ -1406,7 +1476,25 @@ style nvl_button:
 style nvl_button_text:
     properties gui.button_text_properties("nvl_button")
 
+## Title screen ##############################################################
+##
+## The title screen is called to present or indicate chapter breaks in the story
+## or to give the date of an event.
+##
+## https://patreon.renpy.org/title-screens.html
 
+screen title_screen(title):
+
+    text title:
+        xalign 0.5
+        ypos 0.5
+        yanchor 1.0
+
+        #font "Impact.ttf"
+        size 60
+        color "#000000"
+        text_align 0.5
+        layout "subtitle"
 
 ################################################################################
 ## Mobile Variants

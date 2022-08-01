@@ -1,262 +1,118 @@
-﻿# The script of the game goes in this file.
+# The script of the game goes in this file.
 #FOR CUSTOM MAIN MENU -- WATCH: https://youtu.be/q5svrv2KN8g
-define oldMC = Character("Old MC", color = "#FF0044")
-define myst_alternateMC = Character("???", color = "#1DDCB3")
-define alternateMC = Character("Alternate MC", color = "#1DDCB3")
-define kidMC = Character("Kid MC")
+init:
+    python:
+        import math
+        class Shaker(object):
+            anchors = {
+                'top' : 0.0,
+                'center' : 0.5,
+                'bottom' : 1.0,
+                'left' : 0.0,
+                'right' : 1.0,
+                }
+        
+            def __init__(self, start, child, dist):
+                if start is None:
+                    start = child.get_placement()
+                #
+                self.start = [ self.anchors.get(i, i) for i in start ]  # central position
+                self.dist = dist    # maximum distance, in pixels, from the starting point
+                self.child = child
+                
+            def __call__(self, t, sizes):
+                # Float to integer... turns floating point numbers to
+                # integers.                
+                def fti(x, r):
+                    if x is None:
+                        x = 0
+                    if isinstance(x, float):
+                        return int(x * r)
+                    else:
+                        return x
 
-image mcOnDeathBed_Aw = im.Scale("intro/MC_deathbed_awake.jpg", 1920, 1080)
-image mcOnDeathBed_Aw2 = im.Scale("intro/MC_deathbed_awake_2.jpg", 1920, 1080)
-image mcAcceptsDeath = im.Scale("intro/MC_deathbed_acceptance.jpg", 1920, 1080)
+                xpos, ypos, xanchor, yanchor = [ fti(a, b) for a, b in zip(self.start, sizes) ]
 
-image plainWhite = im.Scale("transitions/whitescreen.jpg", 1920, 1080)
-image plainBlack = im.Scale("transitions/blackscreen.jpg", 1920, 1080)
+                xpos = xpos - xanchor
+                ypos = ypos - yanchor
+                
+                nx = xpos + (1.0-t) * self.dist * (renpy.random.random()*2-1)
+                ny = ypos + (1.0-t) * self.dist * (renpy.random.random()*2-1)
+
+                return (int(nx), int(ny), 0, 0)
+        
+        def _Shake(start, time, child=None, dist=100.0, **properties):
+
+            move = Shaker(start, child, dist=dist)
+        
+            return renpy.display.layout.Motion(move, time, child, add_sizes=True, **properties)
+
+        Shake = renpy.curry(_Shake)
+    #   
+        #GENERATE ID - AUTO INCREMENT
+        #CREATE A PERSISTENT VARIABLE FOR TOTAL NUMBER OF PLAYS
+        #AND ANOTHER PERSISTENT VARIABLE FOR ID (ID = totalNumberOfPlays + 1)
+        #THEN ASSIGN TO A .JSON FILE
+#
+init:
+    $ sshake = Shake((0, 0, 0, 0), 1.0, dist=10)
+    $ renpy.music.register_channel("ambient","sfx",loop=True,tight=True)
+
+$ persistent.ch00 = False
+$ persistent.ch01 = False
+$ persistent.ch02 = False
+$ persistent.ch03 = False
+$ persistent.ch04 = False
+$ persistent.ch05 = False
+$ persistent.ch06 = False
+$ persistent.totalSurveyScore = 0
+$ persistent.scorePercentage = 0
+$ persistent.kidMC = "Robert"
+default persistent.mc = "Robert"
+
+label splashscreen:
+    scene black
+    with Pause(1)
+
+    play sound "audio/sfx/ping.mp3" volume 0.25
+    show splash at truecenter with dissolve
+    with Pause(2)
+
+    scene black with dissolve
+    with Pause(1)
+return
 
 label start:
-    #ROLL -- WHAT THE STORY IS ALL ABOUT
-    scene plainWhite
-    "INSERT ABSTRACT THROUGH NARRATION"
-    with fade
+    $ _quit_slot = "quitsave"
+    $ persistent.totalSurveyScore = 0
 
-    #ROLL -- MC ON DEATHBED REMINISCING HIS PAST
-    play music "audio/introduction/farewell.mp3"
-    scene mcOnDeathBed_Aw
-    oldMC "*Reminiscing the old days*"
-    oldMC "Ugh, what a waste.."
+    if persistent.analytics is None:
+        menu:
+            "Welcome! This game supports analytics. Enabling it will help us on our research requirements, and will send data to Google Analytics and the developers. Do you want to enable analytics?"
 
-    #ROLL -- CONT. OF REMINISCING PAST -- SHOW IMAGES
-    scene mcOnDeathBed_Aw2
-    with fade
-    play sound "audio/introduction/footsteps.ogg"
-    queue sound "audio/introduction/door.4.ogg"
+            "Yes.":
+                $ persistent.analytics = True
+                "Thank you."
 
-    "*Nurse leaving"
-    oldMC "..."
+            "No.":
+                $ persistent.analytics = False
+                "No problem!"
 
-    scene mcOnDeathBed_Aw
-    with fade
+    call startChapter0
+    call startChapter1
+    call startChapter2
+    call startChapter3
+    call startChapter4
+    call startChapter5
+    call startChapter6
+    
+    if(persistent.totalSurveyScore == 0):
+        call startPostGameSurvey
 
-    play sound "audio/introduction/maleGrunt.mp3"
-    "*grunts"
-    oldMC "INSERT MORE DIALOGUE"
+return
 
-    $ transitionCount = 1
-    while(transitionCount < 3):
-        show expression("intro/flashbacks/[transitionCount].png")
-        with dissolve
-        "Click to continue"
-        $ transitionCount += 1
-    "Click to continue"
-    with dissolve
-
-    #ROLL PRESENT MC ACCEPTING DEATH WITH REGRETS
-    scene mcOnDeathBed_Aw
-    with fade
-
-    oldMC "Damn it.. I want to be able to give my family their needs and wants.."
-    oldMC "Ah, I wish I could turn back time.."
-
-    scene mcAcceptsDeath
-    with fade
-    oldMC "INSERT MORE DIALOGUE"
-    play sound "audio/introduction/heartRateToFlatline.mp3" fadeout 1.0
-    oldMC "I'd definitely make their lives easier.."
-    #play sound "audio/introduction/heartRateToFlatline.mp3" fadeout 1.0
-
-    scene plainBlack
-    with fade
-    "..."
-
-    stop sound fadeout 1.0
-    stop music fadeout 1.0
-
-    #ROLL -- WHITE TRANSITION TO KID MC TALKING WITH ALTERNATE MC
-    play music "audio/introduction/decision.mp3"
-    scene plainWhite
-
-    show kidMC confused
-    with dissolve
-    kidMC "Huh.. w-what?"
-    kidMC "Where am I?"
-    myst_alternateMC "Hey, over here kiddo!"
-    kidMC "Wait.. who? who's there? Where am I?"
-
-    show alternateMC welcoming
-    with dissolve
-    alternateMC "INSERT MORE DIALOGUE"
-
-    hide alternateMC
-    show kidMC confused
-    with dissolve
-    kidMC "INSERT MORE DIALOGUE"
-
-    hide kidMC
-    show alternateMC welcoming
-    with dissolve
-    alternateMC "INSERT MORE DIALOGUE"
-    alternateMC """
-    I had two fathers, a rich one and a poor one. One finished his education, had a Ph.D., and went to multiple universities to do his advanced studies.
-
-    The other father never finished his Junior High School.
-    """
-    alternateMC """
-    {b}BUT!{/b} They were both successful in their careers, both earned substantial incomes yet one always struggled financially.
-
-    One father became one of the richest men in the Philippines. He died leaving tens of millions of peso to his family, and charities.
-
-    And the other one... left bills to be paid.
-    """
-    alternateMC """
-    Do not get me wrong, both of them were strong, charismatic and influential. They both offered me advice, but they did not advise the same things.
-
-    Both of my fathers believed strongly in education but did not recommend the same course of study.
-    """
-    alternateMC """
-    If I had only one dad, I would have had to make or break with one's advice.
-
-    But since I've had two dads, that alone offered me the choice of contrasting points of view:
-
-    One of a rich man and one of a poor man.
-    """
-    hide alternateMC
-    show kidMC
-    with dissolve
-    kidMC "..."
-
-    hide kidMC
-    show alternateMC
-    with dissolve
-    alternateMC """
-    Instead of simply accepting or rejecting one idea or the other, I found myself to be... much more logical.
-
-    As I weigh out and compare the options presented to me, I then choose for myself.
-    """
-    alternateMC """
-    {b}However!{/b} The problem was that my 'rich' father was not rich yet, and my 'poor' father was not yet poor.
-
-    Both were just starting out and of course --- both were struggling with money and families. Both had very different points of view about money.
-    """
-
-    hide alternateMC
-    show kidMC
-    with dissolve
-    kidMC "Hmm.. how different are they?"
-
-    hide kidMC
-    show alternateMC
-    with dissolve
-    alternateMC "Curious aren't we, little one? Well, let me give you an example..."
-    alternateMC """
-    One dad would say, '{i}The love of money is {b}not{/b} the root of evil.{/i}'
-
-    While the other would say '{i}The lack of money {b}is{/b} the root of all evil.{/i}'
-    """
-    alternateMC "Much of my precious time was spent on asking myself 'Why does he say that?'."
-
-    hide alternateMC
-    show kidMC
-    with dissolve
-    kidMC "Wouldn't it be easier for you to just agree on one's point of view and simply reject the latter?"
-
-    hide kidMC
-    show alternateMC
-    with dissolve
-    alternateMC """
-    Here, let me ask you something.
-
-    Do you know the reason why the rich get richer, the poor get poorer, and the middle class struggles in debt?
-    """
-    #1ST INTERACTION MENU
-    menu:
-        "...":
-            call reason0
-        "Yes":
-            call reason1 #NO CONTINUATION YET
-
-    alternateMC "See? Schools would rather focus teaching their students scholastic and professional skills rather than financial skills."
-    alternateMC "Now, remember when I told you about deciding for yourself is important?"
-
-    #3RD INTERACTION MENU
-    menu:
-        "Yes":
-            alternateMC "Good, I hope you remember it well as you'll be using it everytime!"
-            pass
-        "No..":
-            call doNotRemember
-
-    alternateMC """
-    Okay so, one dad had a habit of putting his brain to sleep when it came to finances, and other had a habit of exercising his brain.
-
-    Now which do you think would grow stronger financially?
-    """
-
-    #4TH INTERACTION MENU
-    menu:
-        "The one who {b}thinks{/b} constantly?":
-            pass
-        "The one who {b}shuts{/b} his brain off ":
-            pass
-
-    "end"
-    "new change"
-    return
-
-
-#=============================================================================================================#
-
-#1ST USER INTERACTION MENU
-label reason0:
-    alternateMC """
-    No? Well, because the subject of money is taught {b}AT{/b} home, not in school.
-
-    Most of us learn about money from our parents. So what can poor parents tell their child about money?
-    """
-
-    menu:
-        "I guess '{i}Stay in school and study hard?{/i}'":
-            call studyHard
-        "Hmm..":
-            call tellThemToStudy
-
-    return
-
-label reason1:
-    alternateMC "And the reason is?"
-    menu:
-        "CHOICE 1":
-            pass
-        "CHOICE 2":
-            pass
-
-    return
-
-#2ND USER INTERACTION MENU FROM 1ST INTERACTION MENU
-label studyHard:
-    alternateMC "Right! But then the child may graduate with excellent grades, but with a poor person's financial programming and mindset as money management is not taught in schools."
-
-    return
-
-label tellThemToStudy:
-    alternateMC "Of course, to study hard and do their best -- look for a company to work for!"
-
-    return
-
-#3RD USER INTERACTION MENU
-label doNotRemember:
-    alternateMC """
-    Since I had two influential fathers, it's only natural that I learn from both of them.
-
-    I had to think about each dad's advice, and in doing so, I gained valuable insight into the power and effect of one's thoughts on one's life.
-    """
-
-    hide alternateMC
-    show kidMC
-    with dissolve
-    kidMC "Ah, so basically one lets you off the hook, and the other forces you to think?"
-
-    hide kidMC
-    show alternateMC
-    with dissolve
-    alternateMC "Right!"
-
-    return
+label end:
+    #UPLOAD .json FILE TO mongoDB Atlas
+    $ renpy.unlink_save("quitsave")
+    $ _quit_slot = None
+return

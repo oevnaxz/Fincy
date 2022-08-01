@@ -10,6 +10,10 @@ init offset = -2
 ## width and height of the game.
 init python:
     gui.init(1920, 1080)
+    #Scale actual font.
+    config.ftfont_scale["OpenDyslexic-Regular.otf"] = .8
+    #Reduce line spacing.
+    config.ftfont_vertical_extent_scale["OpenDyslexic.otf"] = .8
 
 
 
@@ -55,13 +59,19 @@ define gui.interface_text_color = u'#ffffff'
 ## Fonts and Font Sizes ########################################################
 
 ## The font used for in-game text.
-define gui.text_font = "DejaVuSans.ttf"
+define gui.text_font = gui.preference("font", "DejaVuSans.ttf")
+## For Dyslexic
+#define gui.text_font = "OpenDyslexic-Regular.otf"
 
 ## The font used for character names.
-define gui.name_text_font = "DejaVuSans.ttf"
+define gui.name_text_font = gui.preference("font", "DejaVuSans.ttf")
+## For Dyslexic
+#define gui.name_text_font = "OpenDyslexic-Regular.otf"
 
 ## The font used for out-of-game text.
-define gui.interface_text_font = "DejaVuSans.ttf"
+define gui.interface_text_font = gui.preference("font", "DejaVuSans.ttf")
+## For Dyslexic
+#define gui.interface_text_font = "OpenDyslexic-Regular.otf"
 
 ## The size of normal dialogue text.
 define gui.text_size = 33
@@ -415,6 +425,65 @@ init python:
 
     ## This increases the size of the quick buttons to make them easier to touch
     ## on tablets and phones.
+    if renpy.variant("touch"):
+
+        gui.quick_button_borders = Borders(40, 14, 40, 0)
+
+    ## This changes the size and spacing of various GUI elements to ensure they
+    ## are easily visible on phones.
+    if renpy.variant("small"):
+
+        ## Font sizes.
+        gui.text_size = 30
+        gui.name_text_size = 36
+        gui.notify_text_size = 25
+        gui.interface_text_size = 36
+        gui.button_text_size = 34
+        gui.label_text_size = 36
+
+        ## Adjust the location of the textbox.
+        gui.textbox_height = 240
+        gui.name_xpos = 80
+        gui.dialogue_xpos = 90
+        gui.dialogue_width = 1100
+
+        ## Change the size and spacing of items in the game menu.
+        gui.choice_button_width = 1240
+
+        gui.navigation_spacing = 20
+        gui.pref_button_spacing = 10
+
+        gui.history_height = 190
+        gui.history_text_width = 690
+
+        ## File button layout.
+        gui.file_slot_cols = 2
+        gui.file_slot_rows = 2
+
+        ## NVL-mode.
+        gui.nvl_height = 170
+
+        gui.nvl_name_width = 305
+        gui.nvl_name_xpos = 325
+
+        gui.nvl_text_width = 915
+        gui.nvl_text_xpos = 345
+        gui.nvl_text_ypos = 5
+
+        gui.nvl_thought_width = 1240
+        gui.nvl_thought_xpos = 20
+
+        gui.nvl_button_width = 1240
+        gui.nvl_button_xpos = 20
+
+        ## Quick buttons.
+        gui.quick_button_text_size = 20
+
+'''
+init python:
+
+    ## This increases the size of the quick buttons to make them easier to touch
+    ## on tablets and phones.
     @gui.variant
     def touch():
 
@@ -472,3 +541,4 @@ init python:
 
         gui.nvl_button_width = 1860
         gui.nvl_button_xpos = 30
+'''
